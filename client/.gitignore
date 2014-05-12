@@ -1,0 +1,17 @@
+# System Files
+.DS_Store
+ 
+# Node Modules
+node_modules/*
+ 
+# Bower Files
+app/bower_components/*
+app/components/*
+ 
+# Generated Files
+dist/*
+.tmp/*
+.sass-cache/*
+ 
+# Editor Files
+*.sublime-*

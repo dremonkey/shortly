@@ -1,0 +1,9 @@
+{
+  "name": "particle-backbone-seed",
+  "version": "0.0.1",
+  "dependencies": {
+    "animate-css": "git@github.com:daneden/animate.css.git#3.0.0",
+    "es5-shim": "~2.1.0",
+    "sass-bootstrap": "~3.0.2"
+  }
+}
