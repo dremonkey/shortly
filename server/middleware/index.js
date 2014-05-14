@@ -20,37 +20,37 @@ var middleware = function (server, config) {
   // For security sake, it's better to disable file upload if your application doesn't need it. 
   // To do this, don't use the bodyParser and multipart() middleware
   // @see http://expressjs.com/api.html#bodyParser
-  server.use(express.json());
-  server.use(express.urlencoded());
+  // server.use(express.json());
+  // server.use(express.urlencoded());
+  server.use(express.bodyParser());
 
   server.use(express.methodOverride());
 
   // allow CORS
   // server.use(enableCORS);
 
-  var viewEngine;
-
   // ## Views
 
   // views directory
   server.set('views', config.dirs.views);
 
+  // var viewEngine;
   // view engine
-  switch (config.viewEngine) {
-    case 'jade':
-      server.set('view engine', 'jade');
-      break;
-    case 'ect':
-      viewEngine = require('ect')({watch: true, root: server.get('views')});
-      server.engine('ect', viewEngine.render);
-      server.set('view engine', 'ect');
-      break;
-    case 'html' :
-      viewEngine = require('ect')({watch: true, root: server.get('views')});
-      server.engine('html', viewEngine.render); // assign ect as the engine for html files
-      server.set('view engine', 'html'); // set .html as the default extension
-      break;
-  }
+  // switch (config.viewEngine) {
+  //   case 'jade':
+  //     server.set('view engine', 'jade');
+  //     break;
+  //   case 'ect':
+  //     viewEngine = require('ect')({watch: true, root: server.get('views')});
+  //     server.engine('ect', viewEngine.render);
+  //     server.set('view engine', 'ect');
+  //     break;
+  //   case 'html' :
+  //     viewEngine = require('ect')({watch: true, root: server.get('views')});
+  //     server.engine('html', viewEngine.render); // assign ect as the engine for html files
+  //     server.set('view engine', 'html'); // set .html as the default extension
+  //     break;
+  // }
 
   // ## Livereload 
   if (config.livereload) {

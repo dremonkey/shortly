@@ -1,12 +1,14 @@
 'use strict';
 
 var db = require('../db');
-var LinkModel = require('./link.js');
+var LinkModel = require('./link');
 
 var Click = db.Model.extend({
   tableName: 'clicks',
+
   hasTimestamps: true,
-  link: function() {
+  
+  link: function () {
     return this.belongsTo(LinkModel, 'link_id');
   }
 });

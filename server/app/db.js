@@ -10,10 +10,11 @@ var dbconfig = cfg.db;
 // Initializes the database
 var db = Bookshelf.initialize(dbconfig);
 
-db.knex.schema.hasTable('urls').then(function(exists) {
+db.knex.schema.hasTable('urls').then(function (exists) {
   if (!exists) {
     db.knex.schema.createTable('urls', function (link) {
       link.increments('id').primary();
+      link.integer('user_id').references('id').inTable('users');
       link.string('url', 255);
       link.string('base_url', 255);
       link.string('code', 100);
@@ -26,7 +27,7 @@ db.knex.schema.hasTable('urls').then(function(exists) {
   }
 });
 
-db.knex.schema.hasTable('clicks').then(function(exists) {
+db.knex.schema.hasTable('clicks').then(function (exists) {
   if (!exists) {
     db.knex.schema.createTable('clicks', function (click) {
       click.increments('id').primary();
@@ -38,8 +39,29 @@ db.knex.schema.hasTable('clicks').then(function(exists) {
   }
 });
 
-/************************************************************/
-// Add additional schema definitions below
-/************************************************************/
+db.knex.schema.hasTable('users').then(function (exists) {
+  if (!exists) {
+    db.knex.schema.createTable('users', function (user) {
+      user.increments('id').primary();
+      user.string('username');
+      user.string('password');
+      user.string('salt');
+      user.timestamps();
+    }).then(function (table) {
+      console.log('Created Table', table);
+    });
+  }
+});
+
+// Alter Table
+// db.knex.schema.hasTable('urls').then(function (exists) {
+//   if (exists) {
+//     db.knex.schema.table('urls', function (link) {
+//       link.integer('user_id').references('id').inTable('users');
+//     }).then(function (table) {
+//       console.log('Altered Table', table);
+//     });
+//   }
+// });
 
 module.exports = db;

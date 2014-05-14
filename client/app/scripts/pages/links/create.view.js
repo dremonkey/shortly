@@ -3,6 +3,9 @@
 var _ = require('underscore');
 var Backbone = require('backbone');
 
+var LinkModel = require('./link');
+var LinkView = require('./link.view');
+
 var tpl = require('../../../templates/create.hbs');
 
 var View = Backbone.View.extend({
@@ -26,7 +29,7 @@ var View = Backbone.View.extend({
     e.preventDefault();
 
     var $form = this.$el.find('form .text');
-    var link = new Shortly.Link({url: $form.val()})
+    var link = new LinkModel({url: $form.val()})
     
     link.on('request', this.startSpinner, this);
     link.on('sync', this.success, this);
@@ -37,7 +40,7 @@ var View = Backbone.View.extend({
 
   success: function(link) {
     this.stopSpinner();
-    var view = new Shortly.LinkView({ model: link });
+    var view = new LinkView({model: link});
     this.$el.find('.message').append(view.render().$el.hide().fadeIn());
   },
 

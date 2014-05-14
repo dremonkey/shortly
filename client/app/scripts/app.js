@@ -13,6 +13,9 @@ var FooterView = require('./pages/views/footer');
 // Make sure Backbone.$ is set
 Backbone.$ = $;
 
+// Load jquery plugins
+require('../components/jquery-cookie/jquery.cookie');
+
 var AppView = Backbone.View.extend({
   
   // el should be set to the top level div of your app...
@@ -20,15 +23,27 @@ var AppView = Backbone.View.extend({
 
   initialize: function () {
     vents.on('app:log', this.log);
+    
+    this.loadUserFromCookie();
+    this.model.on('change', this.render, this);
   },
 
   log: function (msg) {
     console.log('App:', msg);
   },
 
+  loadUserFromCookie: function () {
+    var user = $.cookie('user');
+    if (user) {
+      var index = user.indexOf(':');
+      var user = JSON.parse(user.substr(index+1));
+      this.model.set(user);
+    }
+  },
+
   render: function () {
 
-    var headerView = vm.create(this, 'HeaderView', HeaderView);
+    var headerView = vm.create(this, 'HeaderView', HeaderView, {user: this.model});
     var footerView = vm.create(this, 'FooterView', FooterView);
     
     this.$('#region-header').html(headerView.render().el);
