@@ -3,14 +3,16 @@
 var db = require('../db');
 var LinkModel = require('./link');
 
-var Click = db.Model.extend({
+var ClickModel = db.Model.extend({
+  
   tableName: 'clicks',
 
   hasTimestamps: true,
   
   link: function () {
-    return this.belongsTo(LinkModel, 'link_id');
+    return this.belongsTo('Link', 'link_id');
   }
 });
 
-module.exports = Click;
+// module.exports = ClickModel;
+module.exports = db.model('Click', ClickModel);

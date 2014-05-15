@@ -3,12 +3,9 @@
 var db = require('../db');
 var bcrypt = require('bcrypt-nodejs');
 var LinkModel = require('./link');
-var ClickModel = require('./click');
 // var Promise = require('bluebird');
 
-console.log('user click', ClickModel);
-
-var User = db.Model.extend({
+var UserModel = db.Model.extend({
 
   tableName: 'users',
 
@@ -20,17 +17,23 @@ var User = db.Model.extend({
   },
 
   links: function () {
-    return this.hasMany(LinkModel);
+    // @NOTE
+    // Leaving this here to demonstrate an alternative way of
+    // satisfying the circular dependency issue.
+    //
+    // Necessary to avoid circular dependecy problem
+    // @see http://selfcontained.us/2012/05/08/node-js-circular-dependencies/
+    // var LinkModel = require('./link');
+    // return this.hasMany(LinkModel);
+    
+    return this.hasMany('Link');
   },
 
   initialize: function (options) {
-    
-    this.set('username', options.username);
-
-    if (options.password) {
-      var hash = this.secure(options.password);
-      this.set('password', hash);
-    }
+    this.on('creating', function (model) {
+      var hash = this.secure(model.get('password'));
+      model.set('password', hash);
+    });
   },
 
   secure: function (password) {
@@ -45,4 +48,6 @@ var User = db.Model.extend({
   }
 });
 
-module.exports = User;
+// Necessary to avoid circular dependecy problem
+// @see https://github.com/tgriesser/bookshelf/wiki/Plugin:-Model-Registry
+module.exports = db.model('User', UserModel);
