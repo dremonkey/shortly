@@ -5,10 +5,27 @@ var db = require('../db');
 var crypto = require('crypto');
 
 // ## Models
-// var ClickModel = require('./click');
-// var UserModel = require('./user');
+var ClickModel = require('./click');
+var UserModel = require('./user');
 
-var LinkModel = db.mongoose.model('Link', db.urlSchema);
+var Schema = db.mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+
+var urlSchema = new Schema({
+  user_id: ObjectId,
+  url: String,
+  base_url: String,
+  code: String,
+  visits: Number,
+  date: { type: Date, default: Date.now }
+});
+
+urlSchema.methods.clicks = function () {
+  var query = ClickModel.find({'link_id': this._id});
+  console.log(query);
+}
+
+var LinkModel = db.mongoose.model('Link', urlSchema);
 
 module.exports = LinkModel;
 

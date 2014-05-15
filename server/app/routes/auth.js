@@ -40,11 +40,15 @@ module.exports = function (server) {
   });
 
   server.post('/signup', function (req, res) {
-    console.log(req.body);
-    var user = new UserModel({username: req.body.username});
-    user.fetch().then(function (user) {
+    var username = req.body.username;
+    var password = req.body.password;
+
+    UserModel.findOne({username: username}, function (err, user) {
       if (!user) {
-        new UserModel(req.body).save().then(function (user) {
+        
+        var user = new UserModel(req.body);
+        
+        user.save(function (err, user, num) {
           authSuccess(user, req, res);
           res.send(200, {redirect: '/', user: user}); // redirect
         });
@@ -52,5 +56,18 @@ module.exports = function (server) {
         res.send(200, {error: 'Username is taken'});
       }
     });
+
+    // var user = new UserModel({username: req.body.username});
+    
+    // user.fetch().then(function (user) {
+    //   if (!user) {
+    //     new UserModel(req.body).save().then(function (user) {
+    //       authSuccess(user, req, res);
+    //       res.send(200, {redirect: '/', user: user}); // redirect
+    //     });
+    //   } else {
+    //     res.send(200, {error: 'Username is taken'});
+    //   }
+    // });
   });
 };

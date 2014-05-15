@@ -41,16 +41,22 @@ module.exports = function (server) {
   });
 
   server.get('/api/links', auth, function (req, res) {
-    var id = +req.session.user.id;
+    // var id = +req.session.user.id;
 
     // gets all links
     // Links.reset().fetch().then(function (links) {
     //   res.send(200, links.models);
     // });
 
-    new UserModel({id:id}).links().fetch().then(function (links) {
-      res.send(200, links);
-    });
+    // new UserModel({id:id}).links().fetch().then(function (links) {
+    //   res.send(200, links);
+    // });
+
+    var user = new UserModel({username:'Andre'});
+    console.log(user.links(function (err, data) {
+      console.log(data);
+    }));
+    res.send(200, user);
   });
 
   server.post('/api/links', auth, function (req, res) {

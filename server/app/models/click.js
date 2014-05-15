@@ -3,7 +3,15 @@
 var db = require('../db');
 // var LinkModel = require('./link');
 
-var ClickModel = db.mongoose.model('Click', db.clickSchema);
+var Schema = db.mongoose.Schema;
+var ObjectId = Schema.ObjectId;
+
+var clickSchema = new Schema({
+  link_id: ObjectId,
+  date: { type: Date, default: Date.now }
+});
+
+var ClickModel = db.mongoose.model('Click', clickSchema);
 
 // var ClickModel = db.Model.extend({
   

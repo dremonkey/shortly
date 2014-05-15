@@ -18,11 +18,13 @@ var isLoggedIn = function (req) {
 };
 
 var auth = function (req, res, next) {
-  if (!isLoggedIn(req)) {
-    res.send(401, 'Unauthorized Access');
-  } else {
-    next();
-  }
+  // if (!isLoggedIn(req)) {
+  //   res.send(401, 'Unauthorized Access');
+  // } else {
+  //   next();
+  // }
+
+  next();
 };
 
 module.exports = auth;

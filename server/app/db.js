@@ -20,21 +20,36 @@ var conn = mongoose.connect(uri);
 // Load Bookshelf Plugins
 // db.plugin('registry');
 
-var Schema = mongoose.Schema;
-var ObjectId = Schema.ObjectId;
+// var Schema = mongoose.Schema;
+// var ObjectId = Schema.ObjectId;
 
-var urlSchema = new Schema({
-  user_id: ObjectId,
-  url: String,
-  base_url: String,
-  code: String,
-  visits: Number,
-  date: { type: Date, default: Date.now }
-});
+// var urlSchema = new Schema({
+//   user_id: ObjectId,
+//   url: String,
+//   base_url: String,
+//   code: String,
+//   visits: Number,
+//   date: { type: Date, default: Date.now }
+// });
 
-urlSchema.methods.test = function (cb) {
-  console.log('test');
-}
+// urlSchema.methods.test = function () {
+//   console.log('test');
+// }
+
+// var clickSchema = new Schema({
+//   link_id: ObjectId,
+//   date: { type: Date, default: Date.now }
+// });
+
+// var userSchema = new Schema({
+//   username: String,
+//   password: String,
+//   date: { type: Date, default: Date.now }
+// });
+
+// userSchema.methods.test = function () {
+//   console.log('userSchema method', this);
+// }
 
 // db.knex.schema.hasTable('urls').then(function (exists) {
 //   if (!exists) {
@@ -54,11 +69,6 @@ urlSchema.methods.test = function (cb) {
 //   }
 // });
 
-var clickSchema = new Schema({
-  link_id: ObjectId,
-  date: { type: Date, default: Date.now }
-});
-
 // db.knex.schema.hasTable('clicks').then(function (exists) {
 //   if (!exists) {
 //     db.knex.schema.createTable('clicks', function (click) {
@@ -70,12 +80,6 @@ var clickSchema = new Schema({
 //     });
 //   }
 // });
-
-var userSchema = new Schema({
-  username: String,
-  password: String,
-  date: { type: Date, default: Date.now }
-});
 
 // db.knex.schema.hasTable('users').then(function (exists) {
 //   if (!exists) {
@@ -103,8 +107,10 @@ var userSchema = new Schema({
 
 // module.exports = db;
 
-exports.clickSchema = clickSchema;
+
 exports.conn = conn;
-exports.mongoose = mongoose
-exports.urlSchema = urlSchema;
-exports.userSchema = userSchema;
+exports.mongoose = mongoose;
+
+// exports.clickSchema = clickSchema;
+// exports.urlSchema = urlSchema;
+// exports.userSchema = userSchema;
