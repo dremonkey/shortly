@@ -2,52 +2,56 @@
 
 var db = require('../db');
 var bcrypt = require('bcrypt-nodejs');
-var LinkModel = require('./link');
+// var LinkModel = require('./link');
 // var Promise = require('bluebird');
 
-var UserModel = db.Model.extend({
+var UserModel = db.mongoose.model('User', db.userSchema);
 
-  tableName: 'users',
+module.exports = UserModel;
 
-  hasTimestamps: true,
+// var UserModel = db.Model.extend({
 
-  defaults: {
-    username: '',
-    password: ''
-  },
+//   tableName: 'users',
 
-  links: function () {
-    // @NOTE
-    // Leaving this here to demonstrate an alternative way of
-    // satisfying the circular dependency issue.
-    //
-    // Necessary to avoid circular dependecy problem
-    // @see http://selfcontained.us/2012/05/08/node-js-circular-dependencies/
-    // var LinkModel = require('./link');
-    // return this.hasMany(LinkModel);
-    
-    return this.hasMany('Link');
-  },
+//   hasTimestamps: true,
 
-  initialize: function (options) {
-    this.on('creating', function (model) {
-      var hash = this.secure(model.get('password'));
-      model.set('password', hash);
-    });
-  },
+//   defaults: {
+//     username: '',
+//     password: ''
+//   },
 
-  secure: function (password) {
-    var salt = bcrypt.genSaltSync(10);
-    var hash = bcrypt.hashSync(password, salt);
+//   links: function () {
+//     // @NOTE
+//     // Leaving this here to demonstrate an alternative way of
+//     // satisfying the circular dependency issue.
+//     //
+//     // Necessary to avoid circular dependecy problem
+//     // @see http://selfcontained.us/2012/05/08/node-js-circular-dependencies/
+//     // var LinkModel = require('./link');
+//     // return this.hasMany(LinkModel);
 
-    return hash;
-  },
+//     return this.hasMany('Link');
+//   },
 
-  validPassword: function (password) {
-    return bcrypt.compareSync(password, this.get('password'));
-  }
-});
+//   initialize: function (options) {
+//     this.on('creating', function (model) {
+//       var hash = this.secure(model.get('password'));
+//       model.set('password', hash);
+//     });
+//   },
+
+//   secure: function (password) {
+//     var salt = bcrypt.genSaltSync(10);
+//     var hash = bcrypt.hashSync(password, salt);
+
+//     return hash;
+//   },
+
+//   validPassword: function (password) {
+//     return bcrypt.compareSync(password, this.get('password'));
+//   }
+// });
 
 // Necessary to avoid circular dependecy problem
 // @see https://github.com/tgriesser/bookshelf/wiki/Plugin:-Model-Registry
-module.exports = db.model('User', UserModel);
+// module.exports = db.model('User', UserModel);

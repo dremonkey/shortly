@@ -1,10 +1,10 @@
-'use strict';
+// 'use strict';
 
-var db = require('../db');
-var UserModel = require('../models/user');
+// var db = require('../db');
+// var UserModel = require('../models/user');
 
-var Users = new db.Collection();
+// var Users = new db.Collection();
 
-Users.model = UserModel;
+// Users.model = UserModel;
 
-module.exports = Users;
+// module.exports = Users;

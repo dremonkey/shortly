@@ -1,10 +1,10 @@
-'use strict';
+// 'use strict';
 
-var db = require('../db');
-var LinkModel = require('../models/link');
+// var db = require('../db');
+// var LinkModel = require('../models/link');
 
-var Links = new db.Collection();
+// var Links = new db.Collection();
 
-Links.model = LinkModel;
+// Links.model = LinkModel;
 
-module.exports = Links;
+// module.exports = Links;
