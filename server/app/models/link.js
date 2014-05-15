@@ -1,12 +1,13 @@
 'use strict';
 
+/* jshint camelcase:false */
+
 // ## Module Dependencies
 var db = require('../db');
 var crypto = require('crypto');
 
 // ## Models
 var ClickModel = require('./click');
-var UserModel = require('./user');
 
 var Schema = db.mongoose.Schema;
 var ObjectId = Schema.ObjectId;
@@ -16,57 +17,23 @@ var urlSchema = new Schema({
   url: String,
   base_url: String,
   code: String,
-  visits: Number,
-  date: { type: Date, default: Date.now }
+  visits: {type: Number, default: 0},
+  date: {type: Date, default: Date.now}
 });
 
-urlSchema.methods.clicks = function () {
-  var query = ClickModel.find({'link_id': this._id});
-  console.log(query);
-}
+urlSchema.pre('save', function (next) {
+  var shasum = crypto.createHash('sha1');
+  
+  shasum.update(this.url + this.user_id);
+  this.code = shasum.digest('hex').slice(0, 5);
+
+  next();
+});
+
+urlSchema.methods.clicks = function (cb) {
+  ClickModel.find({'link_id': this._id}, cb);
+};
 
 var LinkModel = db.mongoose.model('Link', urlSchema);
 
 module.exports = LinkModel;
-
-// var LinkModel = db.Model.extend({
-  
-//   tableName: 'urls',
-  
-//   hasTimestamps: true,
-  
-//   defaults: {
-//     visits: 0
-//   },
-
-//   user: function() {
-//     // @NOTE
-//     // Leaving this here to demonstrate an alternative way of
-//     // satisfying the circular dependency issue.
-//     //
-//     // Necessary to avoid circular dependecy problem
-//     // @see http://selfcontained.us/2012/05/08/node-js-circular-dependencies/
-//     // var UserModel = require('./user');
-//     // return this.belongsTo(UserModel, ' user_id');
-
-//     return this.belongsTo('User', 'user_id');
-//   },
-
-//   clicks: function () {
-//     // console.log('link hasMany', this.hasMany(ClickModel));
-//     // return this.hasMany(ClickModel);
-//     return this.hasMany('Click', 'link_id');
-//   },
-
-//   initialize: function () {
-//     this.on('creating', function (model){
-//       var shasum = crypto.createHash('sha1');
-//       shasum.update(model.get('url') + model.get('user_id'));
-//       model.set('code', shasum.digest('hex').slice(0, 5));
-//     });
-//   }
-// });
-
-// // Necessary to avoid circular dependecy problem
-// // @see https://github.com/tgriesser/bookshelf/wiki/Plugin:-Model-Registry
-// module.exports = db.model('Link', LinkModel);

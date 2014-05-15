@@ -1,10 +1,7 @@
 'use strict';
 
 // ## Module Dependencies
-// var db = require('../db');
-var Links = require('../collections/links');
 var LinkModel = require('../models/link');
-var Users = require('../collections/users');
 var UserModel = require('../models/user');
 var util = require('../../utils');
 var auth = require('../auth');
@@ -12,51 +9,49 @@ var auth = require('../auth');
 module.exports = function (server) {
 
   server.get('/api/links/:id/clicks', function (req, res) {
-    var id = +req.params.id;
-    new LinkModel({id:id}).clicks().fetch().then(function (user) {
-      res.send(200, user);
+    var id = req.params.id;
+
+    new LinkModel({_id:id}).clicks(function (clicks) {
+      if (err) {
+        res.send(500, {error: 'Error getting clicks'});
+      } else {
+        res.send(200, clicks);
+      }
     });
   });
 
   server.get('/api/users', auth, function (req, res) {
-    Users.reset().fetch().then(function (users) {
-      res.send(200, users.models);
+    UserModel.find(function (err, users) {
+      if (err) {
+        res.send(500, {error: 'Error getting users'});
+      } else {
+        res.send(200, users);
+      }
     });
   });
 
-  server.get('/api/users/:id', auth, function (req, res) {
-    var id = req.params.id;
+  server.get('/api/users/:username', auth, function (req, res) {
+    var username = req.params.username;
     
-    if (isNaN(+id)) {
-      new UserModel({username: id}).fetch().then(function (user) {
+    UserModel.findOne({username: username}, function (err, user) {      
+      if (err) {
+        res.send(500, {error: 'Error getting user'});
+      } else {
         res.send(200, user);
-      });
-    } else {
-      console.log(new UserModel({id: +id}));
-      new UserModel({id: +id}).fetch().then(function (user) {
-        console.log('user', user);
-        res.send(200, user);
-      });
-    }
+      }
+    });
   });
 
   server.get('/api/links', auth, function (req, res) {
-    // var id = +req.session.user.id;
+    var id = req.session.user._id;
 
-    // gets all links
-    // Links.reset().fetch().then(function (links) {
-    //   res.send(200, links.models);
-    // });
-
-    // new UserModel({id:id}).links().fetch().then(function (links) {
-    //   res.send(200, links);
-    // });
-
-    var user = new UserModel({username:'Andre'});
-    console.log(user.links(function (err, data) {
-      console.log(data);
-    }));
-    res.send(200, user);
+    new UserModel({_id: id}).links(function (err, links) {
+      if (err) {
+        res.send(500, {error: 'Error getting link'});
+      } else {
+        res.send(200, links);  
+      }
+    });
   });
 
   server.post('/api/links', auth, function (req, res) {
@@ -64,31 +59,32 @@ module.exports = function (server) {
     var user = req.session.user;
     
     if (!util.isValidUrl(uri)) {
-      console.log('Not a valid url: ', uri);
-      return res.send(404);
+      return res.json(400, {error: 'Not a valid url: ' + uri});
     }
 
-    new LinkModel({url: uri}).fetch().then(function (exists) {
-      if (exists) {
-        res.send(200, exists.attributes);
+    LinkModel.findOne({url: uri}, function (err, link) {
+      if (link) {
+        return res.send(200, link);
       } else {
-        util.getUrlTitle(uri, function(err, title) {
+        util.getUrlTitle(uri, function (err, title) {
           if (err) {
             console.log('Error reading URL heading: ', err);
             return res.send(404);
           }
 
-          /* jshint camelcase:false */
-          var link = new LinkModel({
-            user_id: user.id,
+          link = new LinkModel({
+            user_id: user._id,
             url: uri,
             title: title,
             base_url: req.headers.origin
           });
 
-          link.save().then(function(newLink) {
-            Links.add(newLink);
-            res.send(200, newLink);
+          link.save(function (err, link) {
+            if (err) {
+              res.send(500, {error: 'Error saving link'});
+            } else {
+              res.send(200, link);
+            }
           });
         });
       }

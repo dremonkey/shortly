@@ -1,9 +1,13 @@
 'use strict';
 
-var ClickModel = require('../models/click');
-var db = require('../db');
-var LinkModel = require('../models/link');
+/* jshint camelcase:false */
 
+// ## Module Dependencies
+var db = require('../db');
+
+// ## Models
+var ClickModel = require('../models/click');
+var LinkModel = require('../models/link');
 
 module.exports = function (server) {
 
@@ -14,24 +18,25 @@ module.exports = function (server) {
   /************************************************************/
 
   server.get('/*', function (req, res) {
-    new LinkModel({ code: req.params[0] }).fetch().then(function (link) {
+    var code = req.params[0];
+
+    LinkModel.findOne({code: code}, function (err, link) {
       if (!link) {
         res.redirect('/');
       } else {
 
-        /* jshint camelcase:false */
         var click = new ClickModel({
-          link_id: link.get('id')
+          link_id: link._id
         });
 
-        click.save().then(function() {
-          db.knex('urls')
-            .where('code', '=', link.get('code'))
-            .update({
-              visits: link.get('visits') + 1,
-            }).then(function() {
-              return res.redirect(link.get('url'));
-            });
+        click.save(function (err, click) {
+          console.log(link);
+
+          // update the link visits counter
+          link.visits += 1;
+          link.save(function (err, link) {
+            return res.redirect(link.url);
+          });
         });
       }
     });

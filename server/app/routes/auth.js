@@ -8,6 +8,7 @@ var authSuccess = function (user, req, res) {
 
   if (!req.session.user) {
     req.session.user = user; // set session
+    console.log(req.session.user);
   }
   
   if (!req.cookies.user) {
@@ -22,7 +23,7 @@ module.exports = function (server) {
 
     UserModel.findOne({username: username}, function (err, user) {
       if (user) {
-        var user = new UserModel(user);
+        user = new UserModel(user);
       
         if (user.validPassword(req.body.password)) {
           authSuccess(user, req, res);
@@ -34,20 +35,6 @@ module.exports = function (server) {
         res.send(200, {error: 'Username/password combination is incorrect'});
       }
     });
-
-    // var user = new UserModel({username: req.body.username});
-    // user.fetch().then(function (user) {
-    //   if (user) {
-    //     if (user.validPassword(req.body.password)) {
-    //       authSuccess(user, req, res);
-    //       res.send(200, {redirect: '/', user: user}); // redirect
-    //     } else {
-    //       res.send(200, {error: 'Username/password combination is incorrect'});
-    //     }
-    //   } else {
-    //     res.send(200, {error: 'Username/password combination is incorrect'});
-    //   }
-    // });
   });
 
   server.post('/logout', function (req, res) {
@@ -62,9 +49,9 @@ module.exports = function (server) {
     UserModel.findOne({username: username}, function (err, user) {
       if (!user) {
         
-        var user = new UserModel(req.body);
+        user = new UserModel(req.body);
         
-        user.save(function (err, user, num) {
+        user.save(function (err, user) {
           authSuccess(user, req, res);
           res.send(200, {redirect: '/', user: user}); // redirect
         });
@@ -72,18 +59,5 @@ module.exports = function (server) {
         res.send(200, {error: 'Username is taken'});
       }
     });
-
-    // var user = new UserModel({username: req.body.username});
-    
-    // user.fetch().then(function (user) {
-    //   if (!user) {
-    //     new UserModel(req.body).save().then(function (user) {
-    //       authSuccess(user, req, res);
-    //       res.send(200, {redirect: '/', user: user}); // redirect
-    //     });
-    //   } else {
-    //     res.send(200, {error: 'Username is taken'});
-    //   }
-    // });
   });
 };
