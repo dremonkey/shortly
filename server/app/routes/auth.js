@@ -18,9 +18,12 @@ var authSuccess = function (user, req, res) {
 module.exports = function (server) {
 
   server.post('/login', function (req, res) {
-    var user = new UserModel({username: req.body.username});
-    user.fetch().then(function (user) {
+    var username = req.body.username;
+
+    UserModel.findOne({username: username}, function (err, user) {
       if (user) {
+        var user = new UserModel(user);
+      
         if (user.validPassword(req.body.password)) {
           authSuccess(user, req, res);
           res.send(200, {redirect: '/', user: user}); // redirect
@@ -31,6 +34,20 @@ module.exports = function (server) {
         res.send(200, {error: 'Username/password combination is incorrect'});
       }
     });
+
+    // var user = new UserModel({username: req.body.username});
+    // user.fetch().then(function (user) {
+    //   if (user) {
+    //     if (user.validPassword(req.body.password)) {
+    //       authSuccess(user, req, res);
+    //       res.send(200, {redirect: '/', user: user}); // redirect
+    //     } else {
+    //       res.send(200, {error: 'Username/password combination is incorrect'});
+    //     }
+    //   } else {
+    //     res.send(200, {error: 'Username/password combination is incorrect'});
+    //   }
+    // });
   });
 
   server.post('/logout', function (req, res) {
@@ -41,7 +58,6 @@ module.exports = function (server) {
 
   server.post('/signup', function (req, res) {
     var username = req.body.username;
-    var password = req.body.password;
 
     UserModel.findOne({username: username}, function (err, user) {
       if (!user) {
