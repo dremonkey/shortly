@@ -12,7 +12,7 @@ module.exports = {
   },
   app: {
     src: [
-      'app/scripts/{,*/}*.js',
+      '<%= paths.client.tld %>/scripts/{,*/}*.js',
     ]
   }
 }

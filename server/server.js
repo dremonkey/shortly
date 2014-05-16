@@ -14,6 +14,7 @@ var cfg = new Config().getSync();
 // Initializes the server
 var server = express();
 
+log.info('Using configurations for ' + process.env.NODE_ENV);
 log.info('Configurations loaded... initializing the server');
 
 // ## Middlesware

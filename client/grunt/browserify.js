@@ -14,14 +14,23 @@ module.exports = {
   },
   app: {
     files: {
-      '.tmp/scripts/app.js': ['app/scripts/main.js']
+      '<%= paths.compiled.tld %>/scripts/app.js': ['<%= paths.client.tld %>/scripts/main.js']
+    }
+  },
+
+  dist: {
+    bundleOptions: {
+      debug: false
+    },
+    files: {
+      '<%= paths.compiled.tld %>/scripts/app.js': ['<%= paths.client.tld %>/scripts/main.js']
     }
   },
 
   // External modules that don't need to be constantly re-compiled
   vendor: {
     src: [],
-    dest: '.tmp/scripts/vendor.js',
+    dest: '<%= paths.compiled.tld %>/scripts/vendor.js',
     options: {
       bundleOptions: {
         debug: false

@@ -2,10 +2,10 @@
 
 module.exports = {
   options: {
-    sassDir: 'app/assets/styles',
-    imagesDir: 'app/assets/images',
-    fontsDir: 'app/assets/fonts',
-    importPath: 'app/components',
+    sassDir: '<%= paths.client.tld %>/assets/styles',
+    imagesDir: '<%= paths.client.tld %>/assets/images',
+    fontsDir: '<%= paths.client.tld %>/assets/fonts',
+    importPath: '<%= paths.client.tld %>/components',
     httpImagesPath: '/images',
     httpGeneratedImagesPath: '/images/generated',
     httpFontsPath: '/styles/fonts',
@@ -16,8 +16,15 @@ module.exports = {
   serve: {
     options: {
       debugInfo: true,
-      cssDir: '.tmp/styles',
-      generatedImagesDir: '.tmp/images/generated'
+      cssDir: '<%= paths.compiled.tld %>/styles',
+      generatedImagesDir: '<%= paths.compiled.tld %>/images/generated'
+    }
+  },
+  dist: {
+    options: {
+      cssDir: '<%= paths.compiled.tld %>/styles',
+      generatedImagesDir: '<%= paths.dist.tld %>/images/generated',
+      environment: 'production'
     }
   }
 };

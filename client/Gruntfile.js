@@ -1,5 +1,7 @@
 'use strict';
 
+// ## Module Dependencies
+
 module.exports = function (grunt) {
 
   // Look for grunt config files in the 'grunt' directory
@@ -39,4 +41,37 @@ module.exports = function (grunt) {
       'watch'
     ]);
   });
+
+  grunt.registerTask('build', [
+    'clean:dist',
+    'browserify:vendor',
+    'browserify:dist',
+    'copy:dist',
+    'concurrent:dist',
+    'useminPrepare',
+    'autoprefixer',
+    'concat',
+    'cssmin',
+    'htmlmin',
+    'uglify',
+    'rev',
+    'usemin', // run last
+  ]);
+
+  grunt.registerTask('dist', [
+    'newer:jshint',
+    'build'
+  ]);
+
+  grunt.registerTask('azure', [
+    'dist',
+    // 'clean:azure',
+    'copy:azure'
+  ]);
+
+  grunt.registerTask('heroku', [
+    'dist',
+    // 'clean:heroku',
+    'copy:heroku'
+  ]);
 };

@@ -12,7 +12,7 @@ module.exports = {
   },
 
   js: {
-    files: ['app/scripts/{,*/}*.js'],
+    files: ['<%= paths.client.tld %>/scripts/{,*/}*.js'],
     tasks: [
       'newer:jshint:app',
       'browserify:app'
@@ -20,16 +20,16 @@ module.exports = {
   },
 
   compass: {
-    files: ['app/styles/{,*/}*.{scss,sass}'],
+    files: ['<%= paths.client.tld %>/styles/{,*/}*.{scss,sass}'],
     tasks: ['compass:serve'],
   },
 
   livereload: {
     files: [
-      'app/index.html', // client side index file
-      'app/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
-      '.tmp/scripts/**/*.js',
-      '.tmp/styles/**/*.css'
+      '<%= paths.client.tld %>/index.html', // client side index file
+      '<%= paths.client.tld %>/images/{,*/}*.{png,jpg,jpeg,gif,webp,svg}',
+      '<%= paths.compiled.tld %>/scripts/**/*.js',
+      '<%= paths.compiled.tld %>/styles/**/*.css'
     ]
   }
 }

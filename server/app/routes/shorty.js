@@ -3,7 +3,6 @@
 /* jshint camelcase:false */
 
 // ## Module Dependencies
-var db = require('../db');
 
 // ## Models
 var ClickModel = require('../models/click');
@@ -29,14 +28,14 @@ module.exports = function (server) {
           link_id: link._id
         });
 
-        click.save(function (err, click) {
-          console.log(link);
-
-          // update the link visits counter
-          link.visits += 1;
-          link.save(function (err, link) {
-            return res.redirect(link.url);
-          });
+        click.save(function (err) {
+          if (!err) {
+            // update the link visits counter
+            link.visits += 1;
+            link.save(function (err, link) {
+              return res.redirect(link.url);
+            });
+          }
         });
       }
     });

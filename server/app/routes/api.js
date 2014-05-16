@@ -1,5 +1,7 @@
 'use strict';
 
+/* jshint camelcase:false */
+
 // ## Module Dependencies
 var LinkModel = require('../models/link');
 var UserModel = require('../models/user');
@@ -11,7 +13,7 @@ module.exports = function (server) {
   server.get('/api/links/:id/clicks', function (req, res) {
     var id = req.params.id;
 
-    new LinkModel({_id:id}).clicks(function (clicks) {
+    new LinkModel({_id:id}).clicks(function (err, clicks) {
       if (err) {
         res.send(500, {error: 'Error getting clicks'});
       } else {
@@ -33,7 +35,7 @@ module.exports = function (server) {
   server.get('/api/users/:username', auth, function (req, res) {
     var username = req.params.username;
     
-    UserModel.findOne({username: username}, function (err, user) {      
+    UserModel.findOne({username: username}, function (err, user) {
       if (err) {
         res.send(500, {error: 'Error getting user'});
       } else {
@@ -49,7 +51,7 @@ module.exports = function (server) {
       if (err) {
         res.send(500, {error: 'Error getting link'});
       } else {
-        res.send(200, links);  
+        res.send(200, links);
       }
     });
   });

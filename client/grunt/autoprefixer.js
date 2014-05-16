@@ -9,9 +9,9 @@ module.exports = {
   dist: {
     files: [{
       expand: true,
-      cwd: '.tmp/styles/',
+      cwd: '<%= paths.compiled.tld %>/styles/',
       src: '{,*/}*.css',
-      dest: '.tmp/styles/'
+      dest: '<%= paths.compiled.tld %>/styles/'
     }]
   }
 };

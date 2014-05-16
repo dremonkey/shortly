@@ -36,7 +36,7 @@ var AppView = Backbone.View.extend({
     var user = $.cookie('user');
     if (user) {
       var index = user.indexOf(':');
-      var user = JSON.parse(user.substr(index+1));
+      user = JSON.parse(user.substr(index+1));
       this.model.set(user);
     }
   },

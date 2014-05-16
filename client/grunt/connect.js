@@ -15,8 +15,8 @@ module.exports = {
       open: false,
       base: [
         // Directories to serve static files from
-        '.tmp',
-        'app'
+        '<%= paths.compiled.tld %>',
+        '<%= paths.client.tld %>'
       ]
     }
   }
